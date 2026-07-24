@@ -1,0 +1,61 @@
+class Solution {
+    public boolean circularArrayLoop(int[] nums) {
+        // HARD QUESTION !!!
+        // never check element in path which was not valid for starting index path
+        int n = nums.length;
+
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 0) continue; // already processed
+
+            int slow = i, fast = i;
+            boolean forward = nums[i] > 0; // direction of movement (+/-)
+
+            while (true) {
+                // Move slow pointer 1 step
+                int nextSlow = nextIndex(nums, slow);
+                
+                // Move fast pointer 2 steps
+                int nextFast1 = nextIndex(nums, fast);
+                if ((nums[nextFast1] > 0) != forward) break;
+
+                int nextFast2 = nextIndex(nums, nextFast1);
+                if ((nums[nextFast2] > 0) != forward) break;
+                fast = nextFast2;
+
+
+                // Direction check: stop if sign changes
+                if ((nums[nextSlow] > 0) != forward ||
+                    (nums[nextFast2] > 0) != forward) {
+                    break;
+                }
+
+                // Self-loop check (length must be > 1)
+                if (nextSlow == slow || nextFast1 == fast || nextFast2 == nextFast1) break;
+                    
+                slow = nextSlow;
+                fast = nextFast2;
+
+                if (slow == fast) {
+                    return true; // cycle found
+                }
+            }
+
+            // Mark all nodes in this path as visited (set to 0)
+            int index = i;
+            while (nums[index] != 0 && (nums[index] > 0) == forward) {
+                int next = nextIndex(nums, index);
+                nums[index] = 0;
+                if (next == index) break;
+                index = next;
+            }
+
+        }
+
+        return false;
+    }
+
+    private int nextIndex(int[] nums, int i) {
+        int n = nums.length;
+        return ((i + nums[i]) % n + n) % n; // safe modulo for negatives
+    }
+}
