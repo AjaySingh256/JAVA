@@ -1,0 +1,51 @@
+class Solution {
+
+    // Checks whether the substring s[left...right] is a palindrome
+    private boolean isPalindrome(String s, int left, int right) {
+
+        while (left < right) {
+
+            // Characters match, continue checking inward
+            if (s.charAt(left) == s.charAt(right)) {
+                left++;
+                right--;
+            }
+
+            // Mismatch found
+            else {
+                return false;
+            }
+        }
+
+        // Entire substring is a palindrome
+        return true;
+    }
+
+    public boolean validPalindrome(String s) {
+
+        int left = 0;
+        int right = s.length() - 1;
+
+        // Traverse from both ends
+        while (left < right) {
+
+            // Characters match
+            if (s.charAt(left) == s.charAt(right)) {
+                left++;
+                right--;
+            }
+
+            // First mismatch encountered
+            else {
+
+                // Try deleting either the left character
+                // or the right character
+                return isPalindrome(s, left + 1, right)
+                        || isPalindrome(s, left, right - 1);
+            }
+        }
+
+        // No mismatches found
+        return true;
+    }
+}
