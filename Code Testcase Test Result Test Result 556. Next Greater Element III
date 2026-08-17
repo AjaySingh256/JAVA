@@ -1,0 +1,55 @@
+class Solution {
+    public void reverse(ArrayList<Integer>list,int start,int end){
+        while(start<end){
+            int temp = list.get(start);
+            list.set(start,list.get(end));
+            list.set(end,temp);
+            start++;
+            end--;
+        }
+    }
+    public int nextGreaterElement(int n) {
+        if(n >= Integer.MAX_VALUE || n<2){
+            return -1;
+        }
+        ArrayList<Integer>list = new ArrayList<>();
+        int temp = n;
+        while(temp>0){
+            int r = temp%10;
+            list.add(r);
+            temp /= 10;
+        }
+        reverse(list,0,list.size()-1);
+        int pivot = -1;
+        for(int i=list.size()-2; i>=0 ; i--){
+            if(list.get(i)<list.get(i+1)){
+                pivot = i;
+                break;
+            }
+        }
+        if(pivot ==  -1){
+            return -1;
+        }
+        for(int i=list.size()-1; i>=0 ; i--){
+            if(list.get(pivot) < list.get(i)){
+                temp = list.get(pivot);
+                list.set(pivot,list.get(i));
+                list.set(i,temp);
+                break;
+            }
+        }
+        int ei = list.size()-1;
+        reverse(list,pivot+1,ei);
+        long ans = 0;
+        for(int x:list){
+            ans = ans*10 + x;
+        }
+        if(n == ans){
+            return -1;
+        }
+        if(ans>Integer.MAX_VALUE){
+            return -1;
+        }
+        return (int)ans;
+    }
+}
